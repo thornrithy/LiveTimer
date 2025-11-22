@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@400;700;900&family=Righteous&family=Archivo+Black&family=Montserrat:wght@400;700&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/style.css">
-
 </head>
 
 <body>
@@ -53,14 +52,37 @@
 
         <div class="countdown-controls" id="countdownControls">
             <button class="control-btn" onclick="setCountdown(5)">5 min</button>
-            <button class="control-btn" onclick="setCountdown(10)">10 min</button>
             <button class="control-btn" onclick="setCountdown(15)">15 min</button>
             <button class="control-btn" onclick="setCountdown(30)">30 min</button>
+            <button class="control-btn" onclick="setCustomTime()">
+                <i class="fas fa-edit"></i> Custom
+            </button>
             <button class="control-btn" onclick="toggleTimer()">
                 <i class="fas fa-play" id="timerIcon"></i>
             </button>
             <button class="control-btn" onclick="resetTimer()">
                 <i class="fas fa-redo"></i> Reset
+            </button>
+        </div>
+
+        <div class="custom-timer-container" id="customTimerContainer">
+            <div class="time-input-group">
+                <span class="time-label">Hours</span>
+                <input type="number" class="time-input" id="hoursInput" min="0" max="23" value="0" placeholder="0">
+            </div>
+            <div class="time-input-group">
+                <span class="time-label">Minutes</span>
+                <input type="number" class="time-input" id="minutesInput" min="0" max="59" value="0" placeholder="0">
+            </div>
+            <div class="time-input-group">
+                <span class="time-label">Seconds</span>
+                <input type="number" class="time-input" id="secondsInput" min="0" max="59" value="0" placeholder="0">
+            </div>
+            <button class="control-btn" onclick="applyCustomTime()">
+                <i class="fas fa-check"></i> Apply
+            </button>
+            <button class="control-btn" onclick="cancelCustomTime()">
+                <i class="fas fa-times"></i> Cancel
             </button>
         </div>
     </div>
