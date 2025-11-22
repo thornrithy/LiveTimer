@@ -68,7 +68,8 @@ body {
 }
 
 .settings-btn,
-.todo-toggle-btn {
+.todo-toggle-btn,
+.youtube-toggle-btn {
     background: rgba(255, 255, 255, 0.2);
     border: none;
     color: white;
@@ -84,14 +85,15 @@ body {
 }
 
 .settings-btn:hover,
-.todo-toggle-btn:hover {
+.todo-toggle-btn:hover,
+.youtube-toggle-btn:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: rotate(90deg);
 }
 
 .time-display {
     text-align: center;
-    color: white;
+    color: rgba(255, 255, 255, 0.75);
     margin: 40px 0;
 }
 
@@ -99,7 +101,7 @@ body {
     margin-top: 50px;
     font-size: 120px;
     font-weight: 900;
-    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
     letter-spacing: 5px;
     font-family: 'Orbitron', monospace;
     transition: all 0.3s ease;
@@ -169,13 +171,14 @@ body {
 
 /* Todo Sidebar Styles */
 
-.todo-sidebar {
+.todo-sidebar,
+.youtube-sidebar {
     position: fixed;
     top: 0;
     right: -400px;
     width: 400px;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.025);
+    background: rgba(255, 255, 255, 0.035);
     z-index: 1000;
     transition: right 0.3s ease;
     padding: 20px;
@@ -183,11 +186,12 @@ body {
     border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.todo-sidebar.open {
+.todo-sidebar.open,
+.youtube-sidebar.open {
     right: 0;
 }
 
-.todo-header {
+.sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -195,18 +199,20 @@ body {
     color: white;
 }
 
-.todo-header h3 {
+.sidebar-header h3 {
     font-size: 24px;
     font-weight: 600;
 }
 
-.todo-input-container {
+.todo-input-container,
+.youtube-input-container {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.todo-input {
+.todo-input,
+.youtube-input {
     margin-top: 10px;
     flex: 1;
     padding: 12px 20px;
@@ -217,7 +223,8 @@ body {
     font-size: 16px;
 }
 
-.todo-input::placeholder {
+.todo-input::placeholder,
+.youtube-input::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -238,13 +245,15 @@ body {
     transform: scale(1.05);
 }
 
-.todo-list {
+.todo-list,
+.youtube-list {
     list-style: none;
 }
 
-.todo-item {
+.todo-item,
+.youtube-item {
     background: rgba(255, 255, 255, 0.1);
-    padding: 15px 20px;
+    padding: 8px 15px;
     margin-bottom: 10px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
@@ -266,7 +275,8 @@ body {
     }
 }
 
-.todo-item:hover {
+.todo-item:hover,
+.youtube-item:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateX(5px);
 }
@@ -285,12 +295,14 @@ body {
     cursor: pointer;
 }
 
-.todo-icon {
+.todo-icon,
+.youtube-icon {
     font-size: 20px;
     color: white;
 }
 
-.todo-text {
+.todo-text,
+.youtube-text {
     flex: 1;
     color: white;
     font-size: 16px;
@@ -547,7 +559,8 @@ body {
     .modal-content {
         padding: 20px;
     }
-    .todo-sidebar {
+    .todo-sidebar,
+    .youtube-sidebar {
         width: 100%;
         right: -100%;
     }
@@ -642,4 +655,60 @@ body {
     border-radius: 4px;
     font-size: 10px;
     font-weight: bold;
+}
+
+
+/* YouTube Player Styles */
+
+.youtube-player-container {
+    margin-bottom: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.youtube-player {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+}
+
+.youtube-item {
+    cursor: pointer;
+}
+
+.youtube-item.active {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.youtube-item .youtube-icon {
+    color: #FF0000;
+}
+
+.youtube-thumbnail {
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.youtube-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.youtube-title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
+    color: white;
+}
+
+.youtube-channel {
+    font-size: 12px;
+    opacity: 0.8;
+    color: white;
 }

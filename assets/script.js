@@ -1,238 +1,274 @@
-  let currentMode = 'clock';
-  let countdownSeconds = 0;
-  let timerInterval = null;
-  let isTimerRunning = false;
-  let selectedIcon = 'circle-check';
-  let todos = [];
+let currentMode = 'clock';
+let countdownSeconds = 0;
+let timerInterval = null;
+let isTimerRunning = false;
+let selectedIcon = 'circle-check';
+let todos = [];
+let youtubeVideos = [];
+let currentVideoId = null;
 
-  const backgrounds = {
-      gradient1: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      gradient2: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      gradient3: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      gradient4: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      gradient5: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-      gradient6: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-      mountains: 'url(https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800)',
-      lake: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800)',
-      gif1: 'url(https://media.giphy.com/media/l0HlSF6Qa8Qw7W5Y4/giphy.gif)',
-      gif2: 'url(https://media.giphy.com/media/3o7aD2s2fC7bV7aRkY/giphy.gif)'
-  };
+const backgrounds = {
+    gradient1: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    gradient2: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    gradient3: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    gradient4: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+    gradient5: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    gradient6: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    mountains: 'url(https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800)',
+    lake: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800)',
+    gif1: 'url(https://media.giphy.com/media/l0HlSF6Qa8Qw7W5Y4/giphy.gif)',
+    gif2: 'url(https://media.giphy.com/media/3o7aD2s2fC7bV7aRkY/giphy.gif)'
+};
 
-  // Load settings from localStorage
-  function loadSettings() {
-      try {
-          const bg = localStorage.getItem('background');
-          if (bg) {
-              if (bg.startsWith('http') || bg.startsWith('data:')) {
-                  document.getElementById('bgOverlay').style.backgroundImage = `url(${bg})`;
-              } else {
-                  document.getElementById('bgOverlay').style.background = backgrounds[bg] || backgrounds.gradient1;
-              }
+// Load settings from localStorage
+function loadSettings() {
+    try {
+        const bg = localStorage.getItem('background');
+        if (bg) {
+            if (bg.startsWith('http') || bg.startsWith('data:')) {
+                document.getElementById('bgOverlay').style.backgroundImage = `url(${bg})`;
+            } else {
+                document.getElementById('bgOverlay').style.background = backgrounds[bg] || backgrounds.gradient1;
+            }
 
-              // Update active background option
-              document.querySelectorAll('.bg-option').forEach(el => {
-                  if (el.style.background === backgrounds[bg] || el.style.backgroundImage === backgrounds[bg]) {
-                      el.classList.add('active');
-                  } else {
-                      el.classList.remove('active');
-                  }
-              });
-          }
+            // Update active background option
+            document.querySelectorAll('.bg-option').forEach(el => {
+                if (el.style.background === backgrounds[bg] || el.style.backgroundImage === backgrounds[bg]) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
 
-          const font = localStorage.getItem('font');
-          if (font) {
-              document.getElementById('timeDisplay').style.fontFamily = font;
+        const font = localStorage.getItem('font');
+        if (font) {
+            document.getElementById('timeDisplay').style.fontFamily = font;
 
-              // Update active font option
-              document.querySelectorAll('.font-option').forEach(el => {
-                  if (el.textContent === font) {
-                      el.classList.add('active');
-                  } else {
-                      el.classList.remove('active');
-                  }
-              });
-          }
+            // Update active font option
+            document.querySelectorAll('.font-option').forEach(el => {
+                if (el.textContent === font) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
 
-          const fontSize = localStorage.getItem('fontSize');
-          if (fontSize) {
-              document.getElementById('timeDisplay').style.fontSize = `${fontSize}px`;
-              document.getElementById('fontSizeSlider').value = fontSize;
-              document.getElementById('fontSizeValue').textContent = `${fontSize}px`;
-          }
+        const fontSize = localStorage.getItem('fontSize');
+        if (fontSize) {
+            document.getElementById('timeDisplay').style.fontSize = `${fontSize}px`;
+            document.getElementById('fontSizeSlider').value = fontSize;
+            document.getElementById('fontSizeValue').textContent = `${fontSize}px`;
+        }
 
-          const savedTodos = localStorage.getItem('todos');
-          if (savedTodos) {
-              todos = JSON.parse(savedTodos);
-              renderTodos();
-          }
+        const savedTodos = localStorage.getItem('todos');
+        if (savedTodos) {
+            todos = JSON.parse(savedTodos);
+            renderTodos();
+        }
 
-          // Load sidebar state
-          const sidebarState = localStorage.getItem('sidebarOpen');
-          if (sidebarState === 'true') {
-              toggleTodoSidebar();
-          }
-      } catch (e) {
-          console.log('No saved settings found, using defaults');
-      }
-  }
+        const savedYoutubeVideos = localStorage.getItem('youtubeVideos');
+        if (savedYoutubeVideos) {
+            youtubeVideos = JSON.parse(savedYoutubeVideos);
+            renderYoutubeVideos();
+        }
 
-  // Save settings to localStorage
-  function saveSettings(key, value) {
-      try {
-          localStorage.setItem(key, value);
-      } catch (e) {
-          console.error('Failed to save settings:', e);
-      }
-  }
+        // Load sidebar state
+        const sidebarState = localStorage.getItem('sidebarOpen');
+        if (sidebarState === 'true') {
+            toggleTodoSidebar();
+        }
+    } catch (e) {
+        console.log('No saved settings found, using defaults');
+    }
+}
 
-  function updateClock() {
-      const now = new Date();
-      const timeDisplay = document.getElementById('timeDisplay');
-      const dateDisplay = document.getElementById('dateDisplay');
+// Save settings to localStorage
+function saveSettings(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {
+        console.error('Failed to save settings:', e);
+    }
+}
 
-      if (currentMode === 'clock') {
-          const hours = String(now.getHours()).padStart(2, '0');
-          const minutes = String(now.getMinutes()).padStart(2, '0');
-          const seconds = String(now.getSeconds()).padStart(2, '0');
-          timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
-      }
+function updateClock() {
+    const now = new Date();
+    const timeDisplay = document.getElementById('timeDisplay');
+    const dateDisplay = document.getElementById('dateDisplay');
 
-      const options = {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-      };
-      dateDisplay.textContent = now.toLocaleDateString('en-US', options);
-  }
+    if (currentMode === 'clock') {
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+    }
 
-  function setMode(mode) {
-      currentMode = mode;
-      const buttons = document.querySelectorAll('.mode-btn');
-      buttons.forEach(btn => btn.classList.remove('active'));
-      event.target.closest('.mode-btn').classList.add('active');
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    dateDisplay.textContent = now.toLocaleDateString('en-US', options);
+}
 
-      if (mode === 'countdown' || mode === 'pomodoro') {
-          document.getElementById('countdownControls').classList.add('active');
-          if (mode === 'pomodoro') {
-              setCountdown(25);
-          }
-      } else {
-          document.getElementById('countdownControls').classList.remove('active');
-          resetTimer();
-      }
-  }
+function setMode(mode) {
+    currentMode = mode;
+    const buttons = document.querySelectorAll('.mode-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.mode-btn').classList.add('active');
 
-  function setCountdown(minutes) {
-      countdownSeconds = minutes * 60;
-      updateTimerDisplay();
-      if (isTimerRunning) {
-          toggleTimer();
-      }
-  }
+    if (mode === 'countdown' || mode === 'pomodoro') {
+        document.getElementById('countdownControls').classList.add('active');
+        if (mode === 'pomodoro') {
+            setCountdown(25);
+        }
+    } else {
+        document.getElementById('countdownControls').classList.remove('active');
+        resetTimer();
+    }
+}
 
-  function updateTimerDisplay() {
-      const hours = Math.floor(countdownSeconds / 3600);
-      const minutes = Math.floor((countdownSeconds % 3600) / 60);
-      const seconds = countdownSeconds % 60;
-      document.getElementById('timeDisplay').textContent =
-          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  }
+function setCountdown(minutes) {
+    countdownSeconds = minutes * 60;
+    updateTimerDisplay();
+    if (isTimerRunning) {
+        toggleTimer();
+    }
+}
 
-  function toggleTimer() {
-      if (isTimerRunning) {
-          clearInterval(timerInterval);
-          document.getElementById('timerIcon').className = 'fas fa-play';
-      } else {
-          timerInterval = setInterval(() => {
-              if (countdownSeconds > 0) {
-                  countdownSeconds--;
-                  updateTimerDisplay();
-              } else {
-                  toggleTimer();
-                  alert('Time\'s up!');
-              }
-          }, 1000);
-          document.getElementById('timerIcon').className = 'fas fa-pause';
-      }
-      isTimerRunning = !isTimerRunning;
-  }
+function updateTimerDisplay() {
+    const hours = Math.floor(countdownSeconds / 3600);
+    const minutes = Math.floor((countdownSeconds % 3600) / 60);
+    const seconds = countdownSeconds % 60;
+    document.getElementById('timeDisplay').textContent =
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
 
-  function resetTimer() {
-      clearInterval(timerInterval);
-      isTimerRunning = false;
-      document.getElementById('timerIcon').className = 'fas fa-play';
-      if (currentMode === 'clock') {
-          updateClock();
-      } else {
-          countdownSeconds = 0;
-          updateTimerDisplay();
-      }
-  }
+function toggleTimer() {
+    if (isTimerRunning) {
+        clearInterval(timerInterval);
+        document.getElementById('timerIcon').className = 'fas fa-play';
+    } else {
+        timerInterval = setInterval(() => {
+            if (countdownSeconds > 0) {
+                countdownSeconds--;
+                updateTimerDisplay();
+            } else {
+                toggleTimer();
+                alert('Time\'s up!');
+            }
+        }, 1000);
+        document.getElementById('timerIcon').className = 'fas fa-pause';
+    }
+    isTimerRunning = !isTimerRunning;
+}
 
-  function toggleTodoSidebar() {
-      const sidebar = document.getElementById('todoSidebar');
-      const mainContainer = document.getElementById('mainContainer');
-      const isOpen = sidebar.classList.toggle('open');
+function resetTimer() {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+    document.getElementById('timerIcon').className = 'fas fa-play';
+    if (currentMode === 'clock') {
+        updateClock();
+    } else {
+        countdownSeconds = 0;
+        updateTimerDisplay();
+    }
+}
 
-      if (isOpen) {
-          mainContainer.classList.add('sidebar-open');
-      } else {
-          mainContainer.classList.remove('sidebar-open');
-      }
+function toggleTodoSidebar() {
+    const sidebar = document.getElementById('todoSidebar');
+    const youtubeSidebar = document.getElementById('youtubeSidebar');
+    const mainContainer = document.getElementById('mainContainer');
 
-      // Save sidebar state
-      saveSettings('sidebarOpen', isOpen);
-  }
+    // Close YouTube sidebar if open
+    if (youtubeSidebar.classList.contains('open')) {
+        youtubeSidebar.classList.remove('open');
+        mainContainer.classList.remove('sidebar-open');
+    }
 
-  function selectIcon(element) {
-      document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));
-      element.classList.add('selected');
-      selectedIcon = element.dataset.icon;
-  }
+    const isOpen = sidebar.classList.toggle('open');
 
-  function addTodo() {
-      const input = document.getElementById('todoInput');
-      const text = input.value.trim();
+    if (isOpen) {
+        mainContainer.classList.add('sidebar-open');
+    } else {
+        mainContainer.classList.remove('sidebar-open');
+    }
 
-      if (text) {
-          const todo = {
-              id: Date.now(),
-              text: text,
-              completed: false,
-              icon: selectedIcon
-          };
-          todos.push(todo);
-          input.value = '';
-          saveTodos();
-          renderTodos();
-      }
-  }
+    // Save sidebar state
+    saveSettings('sidebarOpen', isOpen);
+}
 
-  function toggleTodo(id) {
-      const todo = todos.find(t => t.id === id);
-      if (todo) {
-          todo.completed = !todo.completed;
-          saveTodos();
-          renderTodos();
-      }
-  }
+function toggleYoutubeSidebar() {
+    const sidebar = document.getElementById('youtubeSidebar');
+    const todoSidebar = document.getElementById('todoSidebar');
+    const mainContainer = document.getElementById('mainContainer');
 
-  function deleteTodo(id) {
-      todos = todos.filter(t => t.id !== id);
-      saveTodos();
-      renderTodos();
-  }
+    // Close Todo sidebar if open
+    if (todoSidebar.classList.contains('open')) {
+        todoSidebar.classList.remove('open');
+        mainContainer.classList.remove('sidebar-open');
+    }
 
-  function saveTodos() {
-      saveSettings('todos', JSON.stringify(todos));
-  }
+    const isOpen = sidebar.classList.toggle('open');
 
-  function renderTodos() {
-      const list = document.getElementById('todoList');
-      const count = document.getElementById('todoCount');
+    if (isOpen) {
+        mainContainer.classList.add('sidebar-open');
+    } else {
+        mainContainer.classList.remove('sidebar-open');
+    }
+}
 
-      list.innerHTML = todos.map(todo => `
+function selectIcon(element) {
+    document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedIcon = element.dataset.icon;
+}
+
+function addTodo() {
+    const input = document.getElementById('todoInput');
+    const text = input.value.trim();
+
+    if (text) {
+        const todo = {
+            id: Date.now(),
+            text: text,
+            completed: false,
+            icon: selectedIcon
+        };
+        todos.push(todo);
+        input.value = '';
+        saveTodos();
+        renderTodos();
+    }
+}
+
+function toggleTodo(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        saveTodos();
+        renderTodos();
+    }
+}
+
+function deleteTodo(id) {
+    todos = todos.filter(t => t.id !== id);
+    saveTodos();
+    renderTodos();
+}
+
+function saveTodos() {
+    saveSettings('todos', JSON.stringify(todos));
+}
+
+function renderTodos() {
+    const list = document.getElementById('todoList');
+    const count = document.getElementById('todoCount');
+
+    list.innerHTML = todos.map(todo => `
                 <li class="todo-item ${todo.completed ? 'completed' : ''}">
                     <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} 
                            onchange="toggleTodo(${todo.id})">
@@ -244,90 +280,233 @@
                 </li>
             `).join('');
 
-      count.textContent = `${todos.length} task${todos.length !== 1 ? 's' : ''}`;
-  }
+    count.textContent = `${todos.length} task${todos.length !== 1 ? 's' : ''}`;
+}
 
-  function openSettings() {
-      document.getElementById('settingsModal').classList.add('active');
-  }
+// YouTube Functions
+function addYouTubeVideo() {
+    const input = document.getElementById('youtubeInput');
+    const url = input.value.trim();
 
-  function closeSettings() {
-      document.getElementById('settingsModal').classList.remove('active');
-  }
+    if (url) {
+        const videoId = extractYouTubeId(url);
+        if (videoId) {
+            // Get video details using YouTube API
+            getVideoDetails(videoId, (videoData) => {
+                if (videoData) {
+                    const video = {
+                        id: videoId,
+                        title: videoData.title,
+                        channel: videoData.channelTitle,
+                        thumbnail: videoData.thumbnails.default.url
+                    };
+                    youtubeVideos.push(video);
+                    input.value = '';
+                    saveYoutubeVideos();
+                    renderYoutubeVideos();
 
-  function setBackground(bg) {
-      const bgOverlay = document.getElementById('bgOverlay');
+                    // If this is the first video, play it
+                    if (youtubeVideos.length === 1) {
+                        playYouTubeVideo(videoId);
+                    }
+                } else {
+                    alert('Could not fetch video details. Please check the URL and try again.');
+                }
+            });
+        } else {
+            alert('Please enter a valid YouTube URL');
+        }
+    }
+}
 
-      document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
-      event.target.classList.add('active');
+function extractYouTubeId(url) {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : false;
+}
 
-      if (backgrounds[bg]) {
-          if (bg.includes('gradient')) {
-              bgOverlay.style.background = backgrounds[bg];
-              bgOverlay.style.backgroundImage = 'none';
-          } else {
-              bgOverlay.style.backgroundImage = backgrounds[bg];
-          }
-          saveSettings('background', bg);
-      }
-  }
+function getVideoDetails(videoId, callback) {
+    // Using a proxy to avoid CORS issues
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=AIzaSyC5INOFf6gH0v9bV7hK6Y4t8Q9Y1lM6y7U`;
 
-  function setCustomBackground() {
-      const input = document.getElementById('customBgInput');
-      const url = input.value.trim();
+    fetch(proxyUrl + apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.items && data.items.length > 0) {
+                const snippet = data.items[0].snippet;
+                callback({
+                    title: snippet.title,
+                    channelTitle: snippet.channelTitle,
+                    thumbnails: snippet.thumbnails
+                });
+            } else {
+                callback(null);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching video details:', error);
+            // Fallback to basic info if API fails
+            callback({
+                title: 'YouTube Video',
+                channelTitle: 'Unknown Channel',
+                thumbnails: {
+                    default: {
+                        url: 'https://img.icons8.com/color/96/youtube-play.png'
+                    }
+                }
+            });
+        });
+}
 
-      if (url) {
-          document.getElementById('bgOverlay').style.backgroundImage = `url(${url})`;
-          saveSettings('background', url);
-          document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
-      }
-  }
+function playYouTubeVideo(videoId) {
+    const player = document.getElementById('youtubePlayer');
+    player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    currentVideoId = videoId;
 
-  function handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-              const dataUrl = e.target.result;
-              document.getElementById('bgOverlay').style.backgroundImage = `url(${dataUrl})`;
-              saveSettings('background', dataUrl);
-              document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
-          };
-          reader.readAsDataURL(file);
-      }
-  }
+    // Update active video in the list
+    document.querySelectorAll('.youtube-item').forEach(item => {
+        if (item.dataset.videoId === videoId) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
 
-  function setFont(font) {
-      document.querySelectorAll('.font-option').forEach(el => el.classList.remove('active'));
-      event.target.classList.add('active');
+function deleteYouTubeVideo(videoId) {
+    youtubeVideos = youtubeVideos.filter(v => v.id !== videoId);
+    saveYoutubeVideos();
+    renderYoutubeVideos();
 
-      document.getElementById('timeDisplay').style.fontFamily = font;
-      saveSettings('font', font);
-  }
+    // If we deleted the currently playing video, stop it
+    if (currentVideoId === videoId) {
+        const player = document.getElementById('youtubePlayer');
+        player.src = '';
+        currentVideoId = null;
+    }
+}
 
-  function updateFontSize(size) {
-      document.getElementById('timeDisplay').style.fontSize = `${size}px`;
-      document.getElementById('fontSizeValue').textContent = `${size}px`;
-      saveSettings('fontSize', size);
-  }
+function saveYoutubeVideos() {
+    saveSettings('youtubeVideos', JSON.stringify(youtubeVideos));
+}
 
-  // Event listeners
-  document.getElementById('todoToggleBtn').addEventListener('click', toggleTodoSidebar);
+function renderYoutubeVideos() {
+    const list = document.getElementById('youtubeList');
+    const count = document.getElementById('youtubeCount');
 
-  document.getElementById('todoInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-          addTodo();
-      }
-  });
+    list.innerHTML = youtubeVideos.map(video => `
+                <li class="youtube-item" data-video-id="${video.id}" onclick="playYouTubeVideo('${video.id}')">
+                    <img src="${video.thumbnail}" class="youtube-thumbnail" alt="${video.title}">
+                    <div class="youtube-details">
+                        <div class="youtube-title">${video.title}</div>
+                        <div class="youtube-channel">${video.channel}</div>
+                    </div>
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteYouTubeVideo('${video.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </li>
+            `).join('');
 
-  window.onclick = (event) => {
-      const modal = document.getElementById('settingsModal');
-      if (event.target === modal) {
-          closeSettings();
-      }
-  };
+    count.textContent = `${youtubeVideos.length} video${youtubeVideos.length !== 1 ? 's' : ''}`;
 
-  // Initialize the app
-  loadSettings();
-  updateClock();
-  setInterval(updateClock, 1000);
+    // Mark the current video as active
+    if (currentVideoId) {
+        const currentVideo = document.querySelector(`.youtube-item[data-video-id="${currentVideoId}"]`);
+        if (currentVideo) {
+            currentVideo.classList.add('active');
+        }
+    }
+}
+
+function openSettings() {
+    document.getElementById('settingsModal').classList.add('active');
+}
+
+function closeSettings() {
+    document.getElementById('settingsModal').classList.remove('active');
+}
+
+function setBackground(bg) {
+    const bgOverlay = document.getElementById('bgOverlay');
+
+    document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (backgrounds[bg]) {
+        if (bg.includes('gradient')) {
+            bgOverlay.style.background = backgrounds[bg];
+            bgOverlay.style.backgroundImage = 'none';
+        } else {
+            bgOverlay.style.backgroundImage = backgrounds[bg];
+        }
+        saveSettings('background', bg);
+    }
+}
+
+function setCustomBackground() {
+    const input = document.getElementById('customBgInput');
+    const url = input.value.trim();
+
+    if (url) {
+        document.getElementById('bgOverlay').style.backgroundImage = `url(${url})`;
+        saveSettings('background', url);
+        document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
+    }
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const dataUrl = e.target.result;
+            document.getElementById('bgOverlay').style.backgroundImage = `url(${dataUrl})`;
+            saveSettings('background', dataUrl);
+            document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function setFont(font) {
+    document.querySelectorAll('.font-option').forEach(el => el.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.getElementById('timeDisplay').style.fontFamily = font;
+    saveSettings('font', font);
+}
+
+function updateFontSize(size) {
+    document.getElementById('timeDisplay').style.fontSize = `${size}px`;
+    document.getElementById('fontSizeValue').textContent = `${size}px`;
+    saveSettings('fontSize', size);
+}
+
+// Event listeners
+document.getElementById('todoToggleBtn').addEventListener('click', toggleTodoSidebar);
+document.getElementById('youtubeToggleBtn').addEventListener('click', toggleYoutubeSidebar);
+
+document.getElementById('todoInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        addTodo();
+    }
+});
+
+document.getElementById('youtubeInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        addYouTubeVideo();
+    }
+});
+
+window.onclick = (event) => {
+    const modal = document.getElementById('settingsModal');
+    if (event.target === modal) {
+        closeSettings();
+    }
+};
+
+// Initialize the app
+loadSettings();
+updateClock();
+setInterval(updateClock, 1000);
