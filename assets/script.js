@@ -576,16 +576,79 @@ function setCustomBackground() {
 
 function handleFileUpload(event) {
     const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const dataUrl = e.target.result;
-            document.getElementById('bgOverlay').style.backgroundImage = `url(${dataUrl})`;
-            saveSettings('background', dataUrl);
-            document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
-        };
-        reader.readAsDataURL(file);
+
+    if (!file) {
+        console.log('No file selected');
+        return;
     }
+
+    // Check file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/bmp'];
+    if (!validTypes.includes(file.type)) {
+        alert('Please select a valid image file (JPEG, PNG, GIF, WebP, BMP)');
+        event.target.value = ''; // Clear the input
+        return;
+    }
+
+    // Check file size (max 5MB for mobile)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+        alert('File is too large. Please select an image smaller than 5MB.');
+        event.target.value = ''; // Clear the input
+        return;
+    }
+
+    // Show loading message
+    const label = event.target.parentElement;
+    const originalText = label.innerHTML;
+    label.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing image...';
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        try {
+            const dataUrl = e.target.result;
+
+            // Create a test image to verify it loads
+            const testImg = new Image();
+            testImg.onload = function() {
+                // Success - image loaded
+                document.getElementById('bgOverlay').style.backgroundImage = `url(${dataUrl})`;
+                saveSettings('background', dataUrl);
+                document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
+
+                // Show success message
+                label.innerHTML = '<i class="fas fa-check"></i> Image uploaded successfully!';
+                setTimeout(() => {
+                    label.innerHTML = originalText;
+                }, 2000);
+            };
+
+            testImg.onerror = function() {
+                // Error - image failed to load
+                label.innerHTML = originalText;
+                alert('Failed to load the image. Please try another file.');
+                event.target.value = ''; // Clear the input
+            };
+
+            testImg.src = dataUrl;
+
+        } catch (error) {
+            console.error('Error processing image:', error);
+            label.innerHTML = originalText;
+            alert('Error processing the image. Please try again.');
+            event.target.value = ''; // Clear the input
+        }
+    };
+
+    reader.onerror = function() {
+        console.error('Error reading file');
+        label.innerHTML = originalText;
+        alert('Error reading the file. Please try again.');
+        event.target.value = ''; // Clear the input
+    };
+
+    reader.readAsDataURL(file);
 }
 
 function setFont(font) {
