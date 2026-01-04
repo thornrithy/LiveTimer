@@ -94,6 +94,11 @@ body {
     gap: 15px;
 }
 
+.navbar-toggler {
+    border: 1px solid white;
+    color: white;
+}
+
 
 /* ========== BUTTON STYLES ========== */
 
@@ -564,7 +569,7 @@ body {
 
 .modal-content {
     border: 2px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 40px;
     max-width: 600px;
@@ -912,13 +917,6 @@ body {
     .youtube-sidebar.open {
         right: 0;
     }
-    .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 20px;
-        width: 100%;
-    }
     .logo {
         font-size: 24px;
     }
@@ -1043,7 +1041,7 @@ body {
         flex-shrink: 0;
     }
     .icon-selector {
-        justify-content: center;
+        justify-content: start;
         gap: 8px;
     }
     .icon-option {
@@ -1154,7 +1152,7 @@ body {
         font-size: 12px;
     }
     .sidebar-header {
-        flex-direction: column;
+        /* flex-direction: column; */
         align-items: flex-start;
         gap: 5px;
     }
@@ -1298,10 +1296,6 @@ body {
 /* Handle virtual keyboard */
 
 @media (max-height: 400px) {
-    .time-display,
-    .mode-selector {
-        display: none;
-    }
     .main-container {
         justify-content: flex-start;
         padding-top: 10px;
@@ -1312,7 +1306,7 @@ body {
 /* Touch device optimizations */
 
 @media (hover: none) and (pointer: coarse) {
-    .mode-btn,
+    /* .mode-btn,
     .control-btn,
     .add-btn,
     .delete-btn,
@@ -1325,8 +1319,8 @@ body {
     .font-option,
     .format-option {
         min-height: 44px;
-        /* min-width: 44px; */
-    }
+        min-width: 44px;
+    } */
     .time-input,
     .todo-input,
     .youtube-input,
