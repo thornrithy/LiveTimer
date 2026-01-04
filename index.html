@@ -93,7 +93,12 @@
     <div class="youtube-sidebar" id="youtubeSidebar">
         <div class="sidebar-header">
             <h3><i class="fab fa-youtube"></i> Music Player</h3>
-            <span id="youtubeCount">0 videos</span>
+            <div class="sidebar-controls">
+                <span id="youtubeCount">0 videos</span>
+                <button class="sidebar-close-btn" onclick="toggleYoutubeSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <div class="youtube-player-container">
@@ -114,7 +119,12 @@
     <div class="todo-sidebar" id="todoSidebar">
         <div class="sidebar-header">
             <h3><i class="fas fa-list-check"></i> My Tasks</h3>
-            <span id="todoCount">0 tasks</span>
+            <div class="sidebar-controls">
+                <span id="todoCount">0 tasks</span>
+                <button class="sidebar-close-btn" onclick="toggleTodoSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <div class="icon-selector" id="iconSelector">
@@ -196,6 +206,20 @@
                     <span>Font Size:</span>
                     <input type="range" min="40" max="200" value="120" class="font-size-slider" id="fontSizeSlider" oninput="updateFontSize(this.value)">
                     <span class="font-size-value" id="fontSizeValue">120px</span>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4><i class="fas fa-clock"></i> Time Format</h4>
+                <div class="time-format-selector">
+                    <div class="format-option active" data-format="full" onclick="setTimeFormat('full')">
+                        <i class="fas fa-clock"></i>
+                        <span>HH:MM:SS</span>
+                    </div>
+                    <div class="format-option" data-format="short" onclick="setTimeFormat('short')">
+                        <i class="fas fa-clock"></i>
+                        <span>HH:MM</span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1262,3 +1262,108 @@
             padding-top: 10px;
         }
     }
+    /* Add these styles to your existing CSS file */
+    /* Sidebar close button styles */
+    
+    .sidebar-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .sidebar-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .sidebar-close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+    /* Time format selector styles */
+    
+    .time-format-selector {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .format-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 15px 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: white;
+        min-width: 120px;
+        text-align: center;
+    }
+    
+    .format-option:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: translateY(-2px);
+    }
+    
+    .format-option.active {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: white;
+    }
+    
+    .format-option i {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .format-option span {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    /* Responsive adjustments for sidebar close button */
+    
+    @media (max-width: 768px) {
+        .sidebar-close-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+        .sidebar-controls {
+            gap: 10px;
+        }
+        .format-option {
+            min-width: 100px;
+            padding: 12px 15px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .sidebar-close-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 16px;
+        }
+        .format-option {
+            min-width: 80px;
+            padding: 10px 12px;
+        }
+        .format-option i {
+            font-size: 20px;
+        }
+        .format-option span {
+            font-size: 12px;
+        }
+    }
