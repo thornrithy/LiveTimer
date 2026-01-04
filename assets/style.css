@@ -1325,7 +1325,7 @@ body {
     .font-option,
     .format-option {
         min-height: 44px;
-        min-width: 44px;
+        /* min-width: 44px; */
     }
     .time-input,
     .todo-input,
