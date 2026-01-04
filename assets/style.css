@@ -4,12 +4,19 @@
         box-sizing: border-box;
     }
     
+     :root {
+        --viewport-width: 100vw;
+    }
+    
     body {
         font-family: 'Poppins', sans-serif;
         overflow-x: hidden;
         transition: background 0.5s ease;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
+        width: var(--viewport-width);
+        max-width: var(--viewport-width);
+        overflow-x: hidden;
     }
     
     .background-overlay {
@@ -763,4 +770,495 @@
         font-size: 12px;
         opacity: 0.8;
         color: white;
+    }
+    /* Add these CSS updates at the end of your existing CSS, or replace the responsive section */
+    /* Replace all the existing responsive CSS (from line 310 onwards) with this optimized version */
+    /* ========== RESPONSIVE DESIGN ========== */
+    /* Tablet and Small Desktop (768px - 1024px) */
+    
+    @media (max-width: 1024px) {
+        .main-container.sidebar-open {
+            margin-right: 320px;
+        }
+        .todo-sidebar,
+        .youtube-sidebar {
+            width: 320px;
+            right: -320px;
+        }
+        .time-text {
+            font-size: 90px;
+        }
+        .date-text {
+            font-size: 22px;
+        }
+    }
+    /* Mobile Landscape and Small Tablets (576px - 768px) */
+    
+    @media (max-width: 768px) {
+        .main-container {
+            padding: 15px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        .main-container.sidebar-open {
+            margin-right: 0;
+            transform: translateX(-100%);
+        }
+        .todo-sidebar,
+        .youtube-sidebar {
+            width: 100%;
+            right: -100%;
+            padding: 15px;
+            max-width: 100vw;
+        }
+        .todo-sidebar.open,
+        .youtube-sidebar.open {
+            right: 0;
+        }
+        .top-bar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .logo {
+            font-size: 24px;
+        }
+        .top-buttons {
+            width: 100%;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .settings-btn,
+        .todo-toggle-btn,
+        .youtube-toggle-btn {
+            width: 45px;
+            height: 45px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .time-display {
+            margin: 20px 0;
+            width: 100%;
+            overflow: hidden;
+        }
+        .time-text {
+            font-size: 60px;
+            letter-spacing: 2px;
+            margin-top: 30px;
+            line-height: 1.2;
+            word-break: break-word;
+            max-width: 100%;
+        }
+        .date-text {
+            font-size: 18px;
+            padding: 0 10px;
+        }
+        .mode-selector {
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 100%;
+        }
+        .mode-btn {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        .countdown-controls {
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .control-btn {
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        .custom-timer-container {
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .time-input-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 200px;
+            justify-content: center;
+        }
+        .time-input {
+            width: 70px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        /* Modal adjustments */
+        .modal.active {
+            align-items: flex-end;
+            padding: 0;
+        }
+        .modal-content {
+            width: 100%;
+            padding: 20px;
+            max-height: 90vh;
+            border-radius: 20px 20px 0 0;
+            animation: slideUpMobile 0.3s ease;
+            margin: 0;
+        }
+        @keyframes slideUpMobile {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .background-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .font-selector {
+            justify-content: center;
+            gap: 8px;
+        }
+        .font-option {
+            padding: 10px 15px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+        }
+        /* YouTube sidebar adjustments */
+        .youtube-thumbnail {
+            height: 50px;
+            min-width: 70px;
+            object-fit: cover;
+        }
+        .youtube-title {
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        .youtube-channel {
+            font-size: 12px;
+        }
+        .youtube-details {
+            min-width: 0;
+            overflow: hidden;
+        }
+        /* Todo sidebar adjustments */
+        .icon-selector {
+            justify-content: center;
+            gap: 8px;
+        }
+        .todo-input-container,
+        .youtube-input-container {
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        .todo-input,
+        .youtube-input {
+            width: 100%;
+            margin-top: 0;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+        .add-btn {
+            margin-top: 0;
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        /* Sidebar items */
+        .todo-item,
+        .youtube-item {
+            padding: 10px 12px;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .todo-text,
+        .youtube-text {
+            font-size: 14px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .delete-btn {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+    }
+    /* Small Mobile Phones (480px and below) */
+    
+    @media (max-width: 480px) {
+        .main-container {
+            padding: 10px;
+        }
+        .logo {
+            font-size: 20px;
+        }
+        .time-text {
+            font-size: 48px;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        .date-text {
+            font-size: 16px;
+        }
+        .mode-btn {
+            max-width: 100%;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        .control-btn {
+            max-width: 100%;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        .time-input {
+            width: 60px;
+            padding: 8px;
+            font-size: 14px;
+        }
+        .time-label {
+            font-size: 12px;
+        }
+        /* Sidebar adjustments */
+        .sidebar-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        .sidebar-header h3 {
+            font-size: 20px;
+        }
+        .sidebar-header span {
+            font-size: 14px;
+        }
+        /* Modal adjustments */
+        .modal-content {
+            padding: 15px;
+        }
+        .modal-header h2 {
+            font-size: 22px;
+        }
+        .background-grid {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+        .bg-option {
+            border-radius: 8px;
+        }
+        .font-size-control {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .font-size-slider {
+            width: 100%;
+        }
+        /* YouTube player */
+        .youtube-player-container {
+            margin-bottom: 15px;
+        }
+        .youtube-title {
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        .youtube-channel {
+            font-size: 10px;
+        }
+        /* Todo sidebar */
+        .icon-option {
+            width: 35px;
+            height: 35px;
+            font-size: 16px;
+        }
+    }
+    /* Very Small Phones (360px and below) */
+    
+    @media (max-width: 360px) {
+        .time-text {
+            font-size: 40px;
+        }
+        .date-text {
+            font-size: 14px;
+        }
+        .mode-btn {
+            font-size: 13px;
+            padding: 8px 12px;
+        }
+        .control-btn {
+            font-size: 13px;
+            padding: 8px 12px;
+        }
+        .background-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .font-option {
+            min-width: 80px;
+            padding: 8px 10px;
+            font-size: 12px;
+        }
+        .todo-input,
+        .youtube-input {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+        .add-btn {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+    }
+    /* Landscape Mode for Mobile */
+    
+    @media (max-height: 500px) and (orientation: landscape) {
+        .main-container {
+            padding: 10px;
+            min-height: auto;
+        }
+        .time-text {
+            font-size: 40px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .date-text {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .time-display {
+            margin: 10px 0;
+        }
+        .mode-selector {
+            margin-bottom: 15px;
+        }
+        .top-bar {
+            margin-bottom: 15px;
+        }
+        .mode-btn,
+        .control-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        /* Sidebar adjustments for landscape */
+        .todo-sidebar,
+        .youtube-sidebar {
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        .youtube-player-container {
+            max-height: 150px;
+        }
+        .youtube-player {
+            height: 150px;
+        }
+    }
+    /* Touch device optimizations */
+    
+    @media (hover: none) and (pointer: coarse) {
+        /* Make touch targets larger */
+        .mode-btn,
+        .control-btn,
+        .add-btn,
+        .delete-btn,
+        .settings-btn,
+        .todo-toggle-btn,
+        .youtube-toggle-btn {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        /* Prevent zoom on input focus for iOS */
+        .time-input,
+        .todo-input,
+        .youtube-input,
+        .custom-input {
+            font-size: 16px;
+            padding: 12px;
+        }
+        .todo-checkbox {
+            width: 28px;
+            height: 28px;
+        }
+        /* Improve scrolling */
+        .todo-sidebar,
+        .youtube-sidebar {
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Remove hover effects for touch devices */
+        .mode-btn:hover,
+        .control-btn:hover,
+        .add-btn:hover,
+        .delete-btn:hover,
+        .settings-btn:hover,
+        .todo-toggle-btn:hover,
+        .youtube-toggle-btn:hover,
+        .todo-item:hover,
+        .youtube-item:hover,
+        .bg-option:hover,
+        .font-option:hover,
+        .icon-option:hover {
+            transform: none;
+        }
+        /* Active states for touch feedback */
+        .mode-btn:active,
+        .control-btn:active,
+        .add-btn:active,
+        .delete-btn:active,
+        .settings-btn:active,
+        .todo-toggle-btn:active,
+        .youtube-toggle-btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+    }
+    /* Prevent text size adjustment */
+    
+    html {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+    /* Ensure proper scrolling */
+    
+    body {
+        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+    /* Improve tap targets */
+    
+    button,
+    input[type="checkbox"],
+    .icon-option,
+    .bg-option,
+    .font-option {
+        touch-action: manipulation;
+    }
+    /* Prevent blue highlight on tap */
+    
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    /* Handle virtual keyboard */
+    
+    @media (max-height: 400px) {
+        .time-display,
+        .mode-selector {
+            display: none;
+        }
+        .main-container {
+            justify-content: flex-start;
+            padding-top: 10px;
+        }
     }

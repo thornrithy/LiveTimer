@@ -554,3 +554,112 @@
  loadSettings();
  updateClock();
  setInterval(updateClock, 1000);
+ // Mobile-specific optimizations
+ function initMobileOptimizations() {
+     // Check if device is mobile
+     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+     if (isMobile) {
+         // Add mobile class to body
+         document.body.classList.add('is-mobile');
+
+         // Handle back button to close sidebar
+         document.addEventListener('backbutton', handleBackButton, false);
+
+         // Prevent pull-to-refresh on mobile
+         document.body.style.overscrollBehavior = 'none';
+
+         // Fix viewport for mobile
+         let viewport = document.querySelector('meta[name="viewport"]');
+         if (viewport) {
+             viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+         }
+     }
+ }
+
+ function handleBackButton() {
+     const todoSidebar = document.getElementById('todoSidebar');
+     const youtubeSidebar = document.getElementById('youtubeSidebar');
+     const settingsModal = document.getElementById('settingsModal');
+
+     // Close modal first
+     if (settingsModal.classList.contains('active')) {
+         closeSettings();
+         return;
+     }
+
+     // Then close sidebars
+     if (todoSidebar.classList.contains('open')) {
+         toggleTodoSidebar();
+         return;
+     }
+
+     if (youtubeSidebar.classList.contains('open')) {
+         toggleYoutubeSidebar();
+         return;
+     }
+ }
+
+ // Close sidebar when clicking outside on mobile
+ function initSidebarCloseOnOutsideClick() {
+     document.addEventListener('click', function(event) {
+         if (window.innerWidth <= 768) {
+             const todoSidebar = document.getElementById('todoSidebar');
+             const youtubeSidebar = document.getElementById('youtubeSidebar');
+             const mainContainer = document.getElementById('mainContainer');
+
+             const isTodoSidebarOpen = todoSidebar.classList.contains('open');
+             const isYoutubeSidebarOpen = youtubeSidebar.classList.contains('open');
+
+             if (isTodoSidebarOpen || isYoutubeSidebarOpen) {
+                 // Check if click is outside sidebar
+                 const isClickInsideSidebar = todoSidebar.contains(event.target) ||
+                     youtubeSidebar.contains(event.target);
+                 const isClickOnToggleButton = event.target.closest('#todoToggleBtn') ||
+                     event.target.closest('#youtubeToggleBtn');
+
+                 if (!isClickInsideSidebar && !isClickOnToggleButton) {
+                     if (isTodoSidebarOpen) {
+                         toggleTodoSidebar();
+                     } else if (isYoutubeSidebarOpen) {
+                         toggleYoutubeSidebar();
+                     }
+                 }
+             }
+         }
+     });
+ }
+
+ // Handle orientation changes
+ window.addEventListener('orientationchange', function() {
+     // Force reflow on orientation change
+     setTimeout(function() {
+         window.dispatchEvent(new Event('resize'));
+         updateClock(); // Update clock to ensure proper display
+     }, 300);
+ });
+
+ // Initialize mobile optimizations on load
+ document.addEventListener('DOMContentLoaded', function() {
+     initMobileOptimizations();
+     initSidebarCloseOnOutsideClick();
+
+     // Set initial viewport width
+     document.documentElement.style.setProperty('--viewport-width', window.innerWidth + 'px');
+
+     // Update on resize
+     window.addEventListener('resize', function() {
+         document.documentElement.style.setProperty('--viewport-width', window.innerWidth + 'px');
+     });
+ });
+
+ // Add this to your existing loadSettings function (around line 80)
+ // Add after loading other settings:
+ if (window.innerWidth <= 768) {
+     // Auto-close sidebar if it was open on desktop but now on mobile
+     const sidebarState = localStorage.getItem('sidebarOpen');
+     if (sidebarState === 'true') {
+         // Don't auto-open on mobile for better UX
+         localStorage.setItem('sidebarOpen', 'false');
+     }
+ }
