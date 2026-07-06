@@ -109,6 +109,4 @@ Add screenshots of:
 
 **Thorn Rithy**
 
-Final-Year Computer Science Student
-
 GitHub: https://github.com/thornrithy
